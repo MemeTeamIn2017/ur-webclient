@@ -98,7 +98,6 @@ FUNCS.onMessage = function (rawMsg) {
 FUNCS.onClose = function (e) {
     console.log("CLOSE:");
     console.log(e);
-    Enums.Auth.Status.set(Enums.Auth.Status.NotAuthenticated);
     Enums.Socket.Status.set(Enums.Socket.Status.Disconnected);
 };
 

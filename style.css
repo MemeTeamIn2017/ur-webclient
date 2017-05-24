@@ -33,6 +33,16 @@ nav {
 
 }
 
+#connection-info{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#connection-info td{
+    border: 1px solid #cbcbcb;
+    padding: 5px;
+}
+
 #game-table {
     border: 1px solid red;
 }

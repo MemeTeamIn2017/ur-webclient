@@ -24,9 +24,18 @@
 <section id="game">
     <div id="connection-info">
         <table>
+
             <tr>
                 <td>Connection Status</td>
                 <td id="connection-status"></td>
+                <td><input type="button" id="buttons-ws-connect" value="Connect" onclick="connect();"></td>
+                <td><input type="button" id="buttons-ws-disconnect" value="Disconnect" onclick="disconnect();"></td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td><input type="text" name="fields-name" id="fields-name"></td>
+                <!--TODO add the name checks to a visible tooltip.-->
+                <td><input type="button" id="buttons-name-submit" value="Submit" onmouseup="authenticate();"></td>
             </tr>
             <tr>
                 <td>Authentication Status</td>
@@ -67,6 +76,14 @@
             <td class="game-cell"></td>
         </tr>
     </table>
+
+    <div id="game-lobby">
+        <div>LOBBY</div>
+        <div id="game-lobby-playerlist">
+
+        </div>
+    </div>
+
 </section>
 </body>
 </html>

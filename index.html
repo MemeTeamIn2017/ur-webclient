@@ -32,14 +32,43 @@
                 <td><input type="button" id="buttons-ws-disconnect" value="Disconnect" onclick="disconnect();"></td>
             </tr>
             <tr>
-                <td>Name</td>
-                <td><input type="text" name="fields-name" id="fields-name"></td>
-                <!--TODO add the name checks to a visible tooltip.-->
-                <td><input type="button" id="buttons-name-submit" value="Submit" onmouseup="authenticate();"></td>
-            </tr>
-            <tr>
                 <td>Authentication Status</td>
                 <td id="authentication-status"></td>
+            </tr>
+        </table>
+        <table id="auth-table">
+            <tr>
+                <td colspan="3" style="text-align: center; font-size: 16px;">Authenticate</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td colspan="2">Country</td>
+            </tr>
+            <tr>
+                <datalist id="country_codes">
+                    <option value="united kingdom"></option>
+                    <option value="united states"></option>
+                </datalist>
+
+                <td>
+                    <input type="text" id="fields-name" title="PlayerName">
+                </td>
+
+                <!--TODO add the name checks to a visible tooltip.-->
+
+                <td>
+                    <input type="text" id="fields-countrycode" title="CountryCode" list="country_codes" disabled>
+                </td>
+
+                <td style="font-size: 13px;">
+                    <input type="checkbox" id="fields-countrycode-auto" style="vertical-align: text-bottom;"
+                           onchange="updateCountryCodeLock();" checked/>Auto (GeoIP)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <input type="button" id="buttons-name-submit" value="Submit" onmouseup="authenticate();">
+                </td>
             </tr>
         </table>
     </div>
@@ -79,11 +108,27 @@
 
     <div id="game-lobby">
         <div>LOBBY</div>
-        <div id="game-lobby-playerlist">
-
-        </div>
+        <table id="game-lobby-playertable">
+            <thead>
+            <tr>
+                <td>Name</td>
+                <td>Locale</td>
+                <td>In Game?</td>
+            </tr>
+            </thead>
+        </table>
     </div>
 
 </section>
+
+
+<footer>
+    <div>
+        Licensed under GPLv3
+    </div>
+    <div>
+        Flag icons, kindy provided by <a href="http://icondrawer.com">IconDrawer.com</a>
+    </div>
+</footer>
 </body>
 </html>

@@ -33,14 +33,18 @@ nav {
 
 }
 
-#connection-info{
+#connection-info {
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-#connection-info td{
+#connection-info td {
     border: 1px solid #cbcbcb;
     padding: 5px;
+}
+
+#auth-table {
+    font-size: 12px;
 }
 
 #game-table {
@@ -55,7 +59,31 @@ nav {
     padding: 0;
 }
 
+#game-lobby-playertable {
+    width: 300px;
+}
+
+.lobby-player-row {
+    height: 50px;
+    border: 1px solid black;
+}
+
 table, tbody, td {
     margin: 0;
     padding: 0;
+}
+
+footer div {
+    text-align: center;
+    height: 24px;
+
+    font-size: 12px;
+}
+
+footer::before {
+    display: block;
+    margin: 30px auto 5px auto;
+    width: 800px;
+    height: 2px;
+    background: grey;
 }

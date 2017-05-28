@@ -45,6 +45,9 @@ var Enums = {
                 var shouldDisable = status === Enums.Auth.Status.Authenticated || Enums.Socket.Status.VALUE !== Enums.Socket.Status.Connected;
                 View.fieldName.prop("disabled", shouldDisable);
                 View.buttonSubmitName.prop("disabled", shouldDisable);
+                View.fieldCountryCode.prop("disabled", !shouldDisable);
+                View.fieldCountryCode.val("REAL_CC");
+                View.fieldCountryCodeAuto.prop("disabled", shouldDisable);
             }
         }
     }
@@ -75,6 +78,10 @@ FUNCS.onMessage = function (rawMsg) {
             if (e.status) {
                 // ok
                 Enums.Auth.Status.set(Enums.Auth.Status.Authenticated);
+                if (e.hasOwnProperty("locale")) {
+                    View.fieldCountryCode.val(e.locale);
+                    console.log(e.locale)
+                }
             }
             else {
                 // fail
@@ -89,11 +96,32 @@ FUNCS.onMessage = function (rawMsg) {
                 }
             }
             break;
-        case "PLAYER_LIST":
+        case "LOBBY_LIST":
+            if (e.hasOwnProperty("players")) {
+                var player;
+                if (typeof e.players === typeof Array.prototype)
+                    for (var i in e.players) {
+                        player = e.players[i];
+
+                        addPlayerToLobby(player.name, player.locale, player.ingame);
+                    }
+            }
+            break;
+        case "PLAYER_JOINED_LOBBY":
+            var player = e.player;
+            addPlayerToLobby(player.name, player.locale, player.ingame);
             break;
     }
 
 };
+
+function addPlayerToLobby(name, locale, ingame) {
+    View.playerTable.append("<tr class='lobby-player-row'>" +
+        "<td><img src='./image/flags_iso/32/" + locale.toLowerCase() + ".png' alt='" + locale + "'/>" + name + "</td>" +
+        (ingame ? "ingame" : "Free" ) +
+        "</td>" +
+        "</tr>")
+}
 
 FUNCS.onClose = function (e) {
     console.log("CLOSE:");
@@ -107,15 +135,25 @@ FUNCS.onError = function (e) {
 };
 
 function send(object) {
-    CONNECTION.send(JSON.stringify(object));
+    var sentData = JSON.stringify(object);
+    console.log(sentData);
+
+    CONNECTION.send(sentData);
 }
 
 function authenticate() {
     var name = View.fieldName.val();
 
+    var locale = View.fieldCountryCode.val();
+
+    if (View.fieldCountryCodeAuto.prop("checked")) {
+        locale = "";
+    }
+
     send({
         id: "AUTH",
-        name: name
+        name: name,
+        locale: locale
     });
 }
 
@@ -132,6 +170,11 @@ function disconnect() {
     CONNECTION.close()
 }
 
+function updateCountryCodeLock() {
+    View.fieldCountryCode.prop("disabled", View.fieldCountryCodeAuto.prop("checked"));
+    console.log("change");
+}
+
 
 function initialize() {
     View.connectionStatus = $("#connection-status");
@@ -139,6 +182,12 @@ function initialize() {
     View.fieldName = $("#fields-name");
     View.buttonWsConnect = $("#buttons-ws-connect");
     View.buttonSubmitName = $("#buttons-name-submit");
+
+    View.fieldCountryCode = $("#fields-countrycode");
+    View.fieldCountryCodeAuto = $("#fields-countrycode-auto");
+
+
+    View.playerTable = $("#game-lobby-playertable");
 
     Enums.Socket.Status.set(Enums.Socket.Status.Disconnected);
 }

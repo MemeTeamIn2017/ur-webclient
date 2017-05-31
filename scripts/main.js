@@ -1,5 +1,8 @@
-var CONNECTION;
-var FUNCS = {};
+/**
+ * Designer space :D
+ * You can use this as your main JS file.
+ * Everything here can be removed, its only visual leftover parts that DO NOT WORK (currently).
+ */
 var View = {};
 var SESSION = {};
 
@@ -65,58 +68,6 @@ View.strings = {
 
 var Lobby = {};
 
-
-FUNCS.onConnect = function () {
-    Enums.Socket.Status.set(Enums.Socket.Status.Connected);
-};
-
-FUNCS.onMessage = function (rawMsg) {
-    console.log("MSG :");
-    var e = JSON.parse(rawMsg.data);
-    console.log(e);
-
-    switch (e.id) {
-        case "AUTH_STATUS":
-            if (e.status) {
-                // ok
-                Enums.Auth.Status.set(Enums.Auth.Status.Authenticated);
-                if (e.hasOwnProperty("locale")) {
-                    View.fieldCountryCode.val(e.locale);
-                    console.log(e.locale)
-                }
-            }
-            else {
-                // fail
-                if (e.hasOwnProperty("reason")) {
-                    if (e.reason === "TAKEN") {
-                        Enums.Auth.Status.set(Enums.Auth.Status.NameTaken);
-                    } else {
-                        Enums.Auth.Status.set({txt: e.reason, color: "blue"});
-                    }
-                } else {
-                    Enums.Auth.Status.set(Enums.Auth.Status.NotAuthenticated);
-                }
-            }
-            break;
-        case "LOBBY_LIST":
-            if (e.hasOwnProperty("players")) {
-                var player;
-                if (typeof e.players === typeof Array.prototype)
-                    for (var i in e.players) {
-                        player = e.players[i];
-
-                        addPlayerToLobby(player.name, player.locale, player.ingame);
-                    }
-            }
-            break;
-        case "PLAYER_JOINED_LOBBY":
-            var player = e.player;
-            addPlayerToLobby(player.name, player.locale, player.ingame);
-            break;
-    }
-
-};
-
 function addPlayerToLobby(name, locale, ingame) {
     var playerRow = "<tr class='lobby-player-row'>" +
         "<td><img src='./image/flags_iso/32/" + locale.toLowerCase() + ".png' alt='" + locale + "'/>" + name + "</td>" +
@@ -128,52 +79,8 @@ function addPlayerToLobby(name, locale, ingame) {
     View.playerTable.append(playerRow)
 }
 
-FUNCS.onClose = function (e) {
-    console.log("CLOSE:");
-    console.log(e);
-    Enums.Socket.Status.set(Enums.Socket.Status.Disconnected);
-};
-
-FUNCS.onError = function (e) {
-    console.log("ERR :");
-    console.log(e);
-};
-
-function send(object) {
-    var sentData = JSON.stringify(object);
-    console.log(sentData);
-
-    CONNECTION.send(sentData);
-}
-
-function authenticate() {
-    var name = View.fieldName.val();
-
-    var locale = View.fieldCountryCode.val();
-
-    if (View.fieldCountryCodeAuto.prop("checked")) {
-        locale = "";
-    }
-
-    send({
-        id: "AUTH",
-        name: name,
-        locale: locale
-    });
-}
 
 
-function connect() {
-    CONNECTION = new WebSocket("ws://82.103.92.123:4269/");
-    CONNECTION.onmessage = FUNCS.onMessage;
-    CONNECTION.onopen = FUNCS.onConnect;
-    CONNECTION.onclose = FUNCS.onClose;
-    CONNECTION.onerror = FUNCS.onError;
-}
-
-function disconnect() {
-    CONNECTION.close()
-}
 
 function updateCountryCodeLock() {
     View.fieldCountryCode.prop("disabled", View.fieldCountryCodeAuto.prop("checked"));

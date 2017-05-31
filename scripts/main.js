@@ -63,6 +63,8 @@ View.strings = {
     "auth.fail": {txt: "Not Authenticated", color: "red"}
 };
 
+var Lobby = {};
+
 
 FUNCS.onConnect = function () {
     Enums.Socket.Status.set(Enums.Socket.Status.Connected);
@@ -116,11 +118,14 @@ FUNCS.onMessage = function (rawMsg) {
 };
 
 function addPlayerToLobby(name, locale, ingame) {
-    View.playerTable.append("<tr class='lobby-player-row'>" +
+    var playerRow = "<tr class='lobby-player-row'>" +
         "<td><img src='./image/flags_iso/32/" + locale.toLowerCase() + ".png' alt='" + locale + "'/>" + name + "</td>" +
         (ingame ? "ingame" : "Free" ) +
         "</td>" +
-        "</tr>")
+        "</tr>";
+
+
+    View.playerTable.append(playerRow)
 }
 
 FUNCS.onClose = function (e) {
@@ -159,7 +164,7 @@ function authenticate() {
 
 
 function connect() {
-    CONNECTION = new WebSocket("ws://localhost:4269/");
+    CONNECTION = new WebSocket("ws://82.103.92.123:4269/");
     CONNECTION.onmessage = FUNCS.onMessage;
     CONNECTION.onopen = FUNCS.onConnect;
     CONNECTION.onclose = FUNCS.onClose;
